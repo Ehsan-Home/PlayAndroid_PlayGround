@@ -1,8 +1,10 @@
-package com.example.playground;
+package com.example.playground.MainActivity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.example.playground.R;
 
 public class MainActivity extends AppCompatActivity {
 
