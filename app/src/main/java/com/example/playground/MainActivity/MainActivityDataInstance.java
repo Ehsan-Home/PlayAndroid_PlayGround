@@ -1,12 +1,16 @@
 package com.example.playground.MainActivity;
 
+import android.content.Intent;
+
 public class MainActivityDataInstance {
     private String title;
     private int imageResource;
+    private Intent destinationIntent;
 
-    public MainActivityDataInstance(String title, int imageResource) {
+    public MainActivityDataInstance(String title, int imageResource, Intent destinationIntent) {
         this.title = title;
         this.imageResource = imageResource;
+        this.destinationIntent = destinationIntent;
     }
 
     public void setTitle(String title) {
@@ -24,6 +28,8 @@ public class MainActivityDataInstance {
     public int getImageResource() {
         return imageResource;
     }
+
+    public Intent getDestinationIntent() {return  destinationIntent;}
 
     @Override
     public String toString() {

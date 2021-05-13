@@ -1,6 +1,7 @@
 package com.example.playground.MainActivity;
 
-import android.graphics.drawable.Drawable;
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 
 public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapter.MainActivityViewHolder> {
     public final ArrayList<MainActivityDataInstance> dataInstance;
+    private final Context context;
 
     @NonNull
     @Override
@@ -29,8 +31,11 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
     public void onBindViewHolder(@NonNull MainActivityAdapter.MainActivityViewHolder holder, int position) {
         MainActivityDataInstance currentItem = dataInstance.get(position);
         holder.button.setText(currentItem.getTitle());
-//        holder.button.setCompoundDrawables(holder.drawable,null,null,null);
-        holder.button.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_image,0,0,0);
+        holder.button.setCompoundDrawablesRelativeWithIntrinsicBounds(currentItem.getImageResource(),0,0,0);
+        holder.button.setOnClickListener(v -> {
+            Intent intent = currentItem.getDestinationIntent();
+            context.startActivity(intent);
+        });
     }
 
     @Override
@@ -48,8 +53,10 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
         }
     }
 
-    public MainActivityAdapter(ArrayList<MainActivityDataInstance> dataInstance) {
+    public MainActivityAdapter(ArrayList<MainActivityDataInstance> dataInstance,
+                               Context distanceIntent) {
         this.dataInstance = dataInstance;
+        this.context = distanceIntent;
     }
 
 }
