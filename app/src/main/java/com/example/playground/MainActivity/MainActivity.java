@@ -31,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void fillButtons () {
-        buttons.add(new MainActivityDataInstance("button 1",2));
-        buttons.add(new MainActivityDataInstance("button 2",2));
+        buttons.add(new MainActivityDataInstance("Image View",R.drawable.ic_image));
     }
 }

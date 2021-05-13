@@ -1,5 +1,6 @@
 package com.example.playground.MainActivity;
 
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,8 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
     public void onBindViewHolder(@NonNull MainActivityAdapter.MainActivityViewHolder holder, int position) {
         MainActivityDataInstance currentItem = dataInstance.get(position);
         holder.button.setText(currentItem.getTitle());
+//        holder.button.setCompoundDrawables(holder.drawable,null,null,null);
+        holder.button.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_image,0,0,0);
     }
 
     @Override
