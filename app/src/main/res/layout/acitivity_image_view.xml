@@ -7,6 +7,7 @@
     android:gravity="center">
 
     <ImageView
+        android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="5"
@@ -14,8 +15,9 @@
         android:src="@drawable/car1" />
 
     <Button
+        android:id="@+id/changeButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Change"/>
+        android:text="Change" />
 
 </LinearLayout>
