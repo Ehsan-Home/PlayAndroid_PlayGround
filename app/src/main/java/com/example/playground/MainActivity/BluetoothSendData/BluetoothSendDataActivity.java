@@ -4,16 +4,22 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.le.BluetoothLeScanner;
+import android.bluetooth.le.ScanCallback;
+import android.bluetooth.le.ScanFilter;
+import android.bluetooth.le.ScanResult;
+import android.bluetooth.le.ScanSettings;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.playground.R;
 
+import java.util.Arrays;
 import java.util.UUID;
 
 public class BluetoothSendDataActivity extends AppCompatActivity {
@@ -34,15 +40,31 @@ public class BluetoothSendDataActivity extends AppCompatActivity {
     }
 
     private void startScan() {
-        Log.d("ble_enable","in function");
         if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled())
         {
-            Log.d("ble_enable","DISABLED");
             Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableIntent,1);
         }
         else {
-            Log.d("ble_enable","ENABLED");
+            bluetoothLeScanner = bluetoothAdapter.getBluetoothLeScanner();
+            if (bluetoothLeScanner != null) {
+                final ScanFilter scanFilter = new ScanFilter.Builder().build();
+                ScanSettings scanSettings =new ScanSettings.Builder().setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY).build();
+                bluetoothLeScanner.startScan(Arrays.asList(scanFilter),scanSettings,scanCallBack);
+            }
         }
     }
+
+    private ScanCallback scanCallBack = new ScanCallback() {
+        @Override
+        public void onScanResult(int callbackType, ScanResult result) {
+            if(bluetoothLeScanner != null) {
+                bluetoothLeScanner.stopScan(scanCallBack);
+            }
+            String name = result.getDevice().getName();
+            Log.d("ble_scan",name == null ? "unnamed": name);
+
+            super.onScanResult(callbackType, result);
+        }
+    };
 }
