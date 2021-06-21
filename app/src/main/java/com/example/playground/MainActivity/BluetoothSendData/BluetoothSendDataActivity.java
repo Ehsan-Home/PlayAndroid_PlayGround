@@ -2,6 +2,9 @@ package com.example.playground.MainActivity.BluetoothSendData;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothGatt;
+import android.bluetooth.BluetoothGattCallback;
+import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
@@ -63,8 +66,39 @@ public class BluetoothSendDataActivity extends AppCompatActivity {
             }
             String name = result.getDevice().getName();
             Log.d("ble_scan",name == null ? "unnamed": name);
+            result.getDevice().connectGatt(getApplicationContext(),false,bluetoothGattCallback);
 
             super.onScanResult(callbackType, result);
+        }
+    };
+
+    private BluetoothGattCallback bluetoothGattCallback = new BluetoothGattCallback() {
+        @Override
+        public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
+            gatt.discoverServices();
+            super.onConnectionStateChange(gatt, status, newState);
+        }
+
+        @Override
+        public void onServicesDiscovered(BluetoothGatt gatt, int status) {
+            BluetoothGattService bluetoothGattService = gatt.getService(null);
+            BluetoothGattCharacteristic bluetoothGattCharacteristic = bluetoothGattService.getCharacteristic(null);
+            gatt.readCharacteristic(bluetoothGattCharacteristic);
+            super.onServicesDiscovered(gatt, status);
+        }
+
+        @Override
+        public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
+            final String value = characteristic.getStringValue(0);
+            Log.d("ble_result",value);
+            BluetoothGattService bluetoothGattService = gatt.getService(null);
+//            readNextCharacteristic(gatt,characteristic);
+            super.onCharacteristicRead(gatt, characteristic, status);
+        }
+
+        @Override
+        public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
+            super.onCharacteristicWrite(gatt, characteristic, status);
         }
     };
 }
