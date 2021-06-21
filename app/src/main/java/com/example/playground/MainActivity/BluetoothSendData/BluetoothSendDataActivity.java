@@ -51,7 +51,12 @@ public class BluetoothSendDataActivity extends AppCompatActivity {
         else {
             bluetoothLeScanner = bluetoothAdapter.getBluetoothLeScanner();
             if (bluetoothLeScanner != null) {
-                final ScanFilter scanFilter = new ScanFilter.Builder().build();
+                // we can filter based on MAC address & name
+                final ScanFilter scanFilter = new ScanFilter.Builder()
+                        .setDeviceAddress("69:AF:A0:BE:AB:FB")
+                        .setDeviceName(null)
+                        .build();
+
                 ScanSettings scanSettings =new ScanSettings.Builder().setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY).build();
                 bluetoothLeScanner.startScan(Arrays.asList(scanFilter),scanSettings,scanCallBack);
             }
@@ -65,7 +70,10 @@ public class BluetoothSendDataActivity extends AppCompatActivity {
                 bluetoothLeScanner.stopScan(scanCallBack);
             }
             String name = result.getDevice().getName();
-            Log.d("ble_scan",name == null ? "unnamed": name);
+            String address = result.getDevice().getAddress();
+            String nameText = " name :  " + (name == null ? "Unnamed" : name);
+            String addressText = ", address : " + address;
+            Log.d("ble_scan",nameText + addressText);
             result.getDevice().connectGatt(getApplicationContext(),false,bluetoothGattCallback);
 
             super.onScanResult(callbackType, result);
