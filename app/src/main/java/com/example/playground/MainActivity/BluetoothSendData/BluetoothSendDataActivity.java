@@ -4,7 +4,6 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
-import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.le.BluetoothLeScanner;
@@ -23,7 +22,9 @@ import com.example.playground.R;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
+import static android.bluetooth.BluetoothGatt.GATT_READ_NOT_PERMITTED;
 import static android.bluetooth.BluetoothGatt.GATT_SUCCESS;
 import static android.bluetooth.BluetoothProfile.STATE_CONNECTED;
 import static android.bluetooth.BluetoothProfile.STATE_DISCONNECTED;
@@ -105,6 +106,9 @@ public class BluetoothSendDataActivity extends AppCompatActivity {
                 {
                     Log.d("ble_scan", "Successfully connected to " +
                             address);
+//                    Request for larger data transmitting, in write op
+//                    Size in BYTES (Not sure)
+//                    gatt.requestMtu(500);
                     gatt.discoverServices();
                 }
                 if (newState == STATE_DISCONNECTED)
@@ -128,13 +132,35 @@ public class BluetoothSendDataActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onServicesDiscovered(BluetoothGatt gatt, int status) {
-            super.onServicesDiscovered(gatt, status);
-            String address = gatt.getDevice().getAddress();
+        public void onMtuChanged(BluetoothGatt gatt, int mtu, int status) {
+            super.onMtuChanged(gatt, mtu, status);
+            Log.d("ble_scan", "Final size is: " +
+                    mtu +
+                    " status: " + status);
+        }
 
-            Log.d("ble_scan", "Services found for " +
-                    address);
-//            List<BluetoothGattService> services =  gatt.getServices();
+        @Override
+        public void onServicesDiscovered(BluetoothGatt gatt, int status) {
+            UUID serviceUUID = UUID.fromString("00001800-0000-1000-8000-00805f9b34fb");
+            UUID characterUUID = UUID.fromString("00002a00-0000-1000-8000-00805f9b34fb");
+            super.onServicesDiscovered(gatt, status);
+
+            BluetoothGattService service = gatt.getService(serviceUUID);
+            BluetoothGattCharacteristic characteristic = service.getCharacteristic(characterUUID);
+
+            List<BluetoothGattService> services =  gatt.getServices();
+            for (int i = 0 ; i < services.size(); i++)
+            {
+                BluetoothGattService indService = services.get(i);
+                Log.d("ble_scan", "Service: " +
+                        service.toString());
+            }
+
+            gatt.readCharacteristic(characteristic);
+
+//            Log.d("ble_scan", "Services found for " +
+//                    address);
+//
 //            if (services == null)
 //            {
 //                Log.d("ble_scan", "services are empty :|");
@@ -154,8 +180,7 @@ public class BluetoothSendDataActivity extends AppCompatActivity {
 //                        service.getCharacteristic(service.getUuid());
 //                BluetoothGattDescriptor serviceDiscriptor =
 //                        serviceCharacteristic.getDescriptor(service.getUuid());
-//                Log.d("ble_scan", "Service: " +
-//                        service.toString());
+//
 //                if (serviceDiscriptor == null)
 //                {
 //                    Log.d("ble_scan", "Description is null for " +
@@ -184,11 +209,22 @@ public class BluetoothSendDataActivity extends AppCompatActivity {
 
         @Override
         public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
-            final String value = characteristic.getStringValue(0);
-            Log.d("ble_result",value);
-            BluetoothGattService bluetoothGattService = gatt.getService(null);
-//            readNextCharacteristic(gatt,characteristic);
             super.onCharacteristicRead(gatt, characteristic, status);
+            if (status == GATT_SUCCESS)
+            {
+                String address = gatt.getDevice().getAddress();
+                Log.d("ble_scan","read success.");
+                String value = characteristic.getStringValue(0);
+//                Log.d("ble_scan","value => "+characteristic.getValue().toString());
+                Log.d("ble_scan","value of +" + address + " => "+ value);
+            }
+            else if (status == GATT_READ_NOT_PERMITTED)
+            {
+                Log.d("ble_scan","read no allowed.");
+            }
+            else {
+                Log.d("ble_scan", "Error -> " + status);
+            }
         }
 
         @Override
