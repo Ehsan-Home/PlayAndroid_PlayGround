@@ -13,9 +13,7 @@ import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,7 +21,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.playground.R;
 
 import java.util.Arrays;
-import java.util.UUID;
+
+import static android.bluetooth.BluetoothGatt.GATT_SUCCESS;
 
 public class BluetoothSendDataActivity extends AppCompatActivity {
     private BluetoothAdapter bluetoothAdapter;
@@ -53,10 +52,13 @@ public class BluetoothSendDataActivity extends AppCompatActivity {
             if (bluetoothLeScanner != null) {
                 // we can filter based on MAC address & name
                 final ScanFilter scanFilter = new ScanFilter.Builder()
-                        .setDeviceAddress("69:AF:A0:BE:AB:FB")
+                        .setDeviceAddress("7E:D0:38:3C:D0:8B")
                         .setDeviceName(null)
+//                        Best way to filter is based on UUID that we have
+//                        .setServiceUuid()
                         .build();
 
+//                Set up scan mode : LOW_LATENCY
                 ScanSettings scanSettings =new ScanSettings.Builder().setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY).build();
                 bluetoothLeScanner.startScan(Arrays.asList(scanFilter),scanSettings,scanCallBack);
             }
@@ -74,16 +76,34 @@ public class BluetoothSendDataActivity extends AppCompatActivity {
             String nameText = " name :  " + (name == null ? "Unnamed" : name);
             String addressText = ", address : " + address;
             Log.d("ble_scan",nameText + addressText);
+//            Probably the best place to stop the scan
+            bluetoothLeScanner.stopScan(scanCallBack);
             result.getDevice().connectGatt(getApplicationContext(),false,bluetoothGattCallback);
 
+
             super.onScanResult(callbackType, result);
+        }
+
+        @Override
+        public void onScanFailed(int errorCode) {
+            super.onScanFailed(errorCode);
+            Log.e("scan_error", String.valueOf(errorCode));
         }
     };
 
     private BluetoothGattCallback bluetoothGattCallback = new BluetoothGattCallback() {
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
-            gatt.discoverServices();
+            if (status == GATT_SUCCESS)
+            {
+                gatt.discoverServices();
+            }
+            else {
+                Log.d("ble_scan", "error in onConnectionChange");
+                gatt.close();
+                gatt = null;
+            }
+
             super.onConnectionStateChange(gatt, status, newState);
         }
 
