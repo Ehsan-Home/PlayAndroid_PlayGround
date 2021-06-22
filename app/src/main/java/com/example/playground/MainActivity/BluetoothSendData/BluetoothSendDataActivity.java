@@ -23,6 +23,7 @@ import com.example.playground.R;
 import java.util.Arrays;
 
 import static android.bluetooth.BluetoothGatt.GATT_SUCCESS;
+import static android.bluetooth.BluetoothProfile.STATE_CONNECTED;
 
 public class BluetoothSendDataActivity extends AppCompatActivity {
     private BluetoothAdapter bluetoothAdapter;
@@ -52,8 +53,8 @@ public class BluetoothSendDataActivity extends AppCompatActivity {
             if (bluetoothLeScanner != null) {
                 // we can filter based on MAC address & name
                 final ScanFilter scanFilter = new ScanFilter.Builder()
-                        .setDeviceAddress("7E:D0:38:3C:D0:8B")
-                        .setDeviceName(null)
+//                        .setDeviceAddress("7E:D0:38:3C:D0:8B")
+//                        .setDeviceName(null)
 //                        Best way to filter is based on UUID that we have
 //                        .setServiceUuid()
                         .build();
@@ -79,8 +80,6 @@ public class BluetoothSendDataActivity extends AppCompatActivity {
 //            Probably the best place to stop the scan
             bluetoothLeScanner.stopScan(scanCallBack);
             result.getDevice().connectGatt(getApplicationContext(),false,bluetoothGattCallback);
-
-
             super.onScanResult(callbackType, result);
         }
 
@@ -94,7 +93,7 @@ public class BluetoothSendDataActivity extends AppCompatActivity {
     private BluetoothGattCallback bluetoothGattCallback = new BluetoothGattCallback() {
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
-            if (status == GATT_SUCCESS)
+            if (status == GATT_SUCCESS && newState == STATE_CONNECTED)
             {
                 gatt.discoverServices();
             }
