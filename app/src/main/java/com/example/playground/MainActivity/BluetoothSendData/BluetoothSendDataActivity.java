@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.le.BluetoothLeScanner;
@@ -21,9 +22,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.playground.R;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static android.bluetooth.BluetoothGatt.GATT_SUCCESS;
 import static android.bluetooth.BluetoothProfile.STATE_CONNECTED;
+import static android.bluetooth.BluetoothProfile.STATE_DISCONNECTED;
 
 public class BluetoothSendDataActivity extends AppCompatActivity {
     private BluetoothAdapter bluetoothAdapter;
@@ -60,7 +63,9 @@ public class BluetoothSendDataActivity extends AppCompatActivity {
                         .build();
 
 //                Set up scan mode : LOW_LATENCY
-                ScanSettings scanSettings =new ScanSettings.Builder().setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY).build();
+                ScanSettings scanSettings =new ScanSettings.Builder()
+                        .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
+                        .build();
                 bluetoothLeScanner.startScan(Arrays.asList(scanFilter),scanSettings,scanCallBack);
             }
         }
@@ -93,14 +98,30 @@ public class BluetoothSendDataActivity extends AppCompatActivity {
     private BluetoothGattCallback bluetoothGattCallback = new BluetoothGattCallback() {
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
-            if (status == GATT_SUCCESS && newState == STATE_CONNECTED)
+            if (status == GATT_SUCCESS)
             {
-                gatt.discoverServices();
+                String address = gatt.getDevice().getAddress();
+                if (newState == STATE_CONNECTED)
+                {
+                    Log.d("ble_scan", "Successfully connected to " +
+                            address);
+                    gatt.discoverServices();
+                }
+                if (newState == STATE_DISCONNECTED)
+                {
+                    Log.d("ble_scan", "Successfully disconnected from " +
+                            address);
+                }
             }
+
             else {
-                Log.d("ble_scan", "error in onConnectionChange");
+                Log.d("ble_scan",
+                        "error in onConnectionChange" + " State: "
+                                + status
+                );
                 gatt.close();
-                gatt = null;
+//                gatt = null;
+//                bluetoothGatt = null;
             }
 
             super.onConnectionStateChange(gatt, status, newState);
@@ -108,10 +129,57 @@ public class BluetoothSendDataActivity extends AppCompatActivity {
 
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
-            BluetoothGattService bluetoothGattService = gatt.getService(null);
-            BluetoothGattCharacteristic bluetoothGattCharacteristic = bluetoothGattService.getCharacteristic(null);
-            gatt.readCharacteristic(bluetoothGattCharacteristic);
             super.onServicesDiscovered(gatt, status);
+            String address = gatt.getDevice().getAddress();
+
+            Log.d("ble_scan", "Services found for " +
+                    address);
+//            List<BluetoothGattService> services =  gatt.getServices();
+//            if (services == null)
+//            {
+//                Log.d("ble_scan", "services are empty :|");
+//            }
+//            else {
+//                Log.d("ble_scan", "services are NOT empty :D");
+//            }
+//            if (services.size() == 0)
+//            {
+//                Log.d("ble_scan", "Service size is 0");
+//            }
+//            for (int i = 0 ; i < services.size(); i++)
+//            {
+//                BluetoothGattService service = services.get(i);
+//
+//                BluetoothGattCharacteristic serviceCharacteristic =
+//                        service.getCharacteristic(service.getUuid());
+//                BluetoothGattDescriptor serviceDiscriptor =
+//                        serviceCharacteristic.getDescriptor(service.getUuid());
+//                Log.d("ble_scan", "Service: " +
+//                        service.toString());
+//                if (serviceDiscriptor == null)
+//                {
+//                    Log.d("ble_scan", "Description is null for " +
+//                            address);
+//                }
+//                else
+//                {
+//                    Log.d("ble_scan", "Description: " +
+//                            serviceDiscriptor.toString());
+//                }
+//                if (serviceCharacteristic == null)
+//                {
+//                    Log.d("ble_scan", "Characteristic is null for " +
+//                            address);
+//                }
+//                else {
+//                    Log.d("ble_scan", "Char: " +
+//                            serviceCharacteristic.toString());
+//                }
+//
+//            }
+//            BluetoothGattService service = gatt.getService(null);
+//            BluetoothGattCharacteristic bluetoothGattCharacteristic = service.getCharacteristic(null);
+//            gatt.readCharacteristic(bluetoothGattCharacteristic);
         }
 
         @Override
