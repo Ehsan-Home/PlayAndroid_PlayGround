@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.playground.MainActivity.AWSIoT.AWSIoTActivity;
 import com.example.playground.MainActivity.BluetoothSendData.BluetoothSendDataActivity;
 import com.example.playground.MainActivity.ImageView.ImageViewActivity;
 import com.example.playground.R;
@@ -36,7 +37,9 @@ public class MainActivity extends AppCompatActivity {
     private void fillButtons () {
         Intent imageViewIntent = new Intent(this, ImageViewActivity.class);
         Intent sendBluetoothDataIntent = new Intent(this, BluetoothSendDataActivity.class);
+        Intent AWSIoTIntent = new Intent(this, AWSIoTActivity.class);
         buttons.add(new MainActivityDataInstance("Image View",R.drawable.ic_image,imageViewIntent));
         buttons.add(new MainActivityDataInstance("Send Data via Bluetooth",R.drawable.ic_baseline_send_ble,sendBluetoothDataIntent));
+        buttons.add(new MainActivityDataInstance("AWS IoT",R.drawable.ic_baseline_developer_board_24,AWSIoTIntent));
     }
 }

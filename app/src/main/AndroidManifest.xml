@@ -23,6 +23,7 @@
         </activity>
         <activity android:name=".MainActivity.ImageView.ImageViewActivity" />
         <activity android:name=".MainActivity.BluetoothSendData.BluetoothSendDataActivity"/>
+        <activity android:name=".MainActivity.AWSIoT.AWSIoTActivity" />
     </application>
 
 </manifest>
