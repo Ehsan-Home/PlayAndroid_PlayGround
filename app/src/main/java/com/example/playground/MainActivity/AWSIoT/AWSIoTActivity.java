@@ -7,8 +7,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
+import com.amazonaws.mobileconnectors.iot.AWSIotMqttLastWillAndTestament;
 import com.amazonaws.mobileconnectors.iot.AWSIotMqttManager;
+import com.amazonaws.mobileconnectors.iot.AWSIotMqttQos;
+import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
+import com.amazonaws.services.iot.AWSIotClient;
 import com.example.playground.R;
 
 import java.util.UUID;
@@ -24,6 +28,7 @@ public class AWSIoTActivity extends AppCompatActivity {
 
     private CognitoCachingCredentialsProvider credentialsProvider;
     private AWSIotMqttManager mqttManager;
+    private AWSIotClient mIotAndroidClient;
 
     private String clientId;
 
@@ -45,7 +50,18 @@ public class AWSIoTActivity extends AppCompatActivity {
                 MY_REGION
         );
 
+        Region region = Region.getRegion(MY_REGION);
+
         mqttManager = new AWSIotMqttManager(clientId,CUSTOMER_SPECIFIC_ENDPOINT);
+        mqttManager.setKeepAlive(10);
+        AWSIotMqttLastWillAndTestament lwt = new AWSIotMqttLastWillAndTestament("my/lwt/topic",
+                "Android device lost connection", AWSIotMqttQos.QOS0);
+        mqttManager.setMqttLastWillAndTestament(lwt);
+
+        mIotAndroidClient = new AWSIotClient(credentialsProvider);
+        mIotAndroidClient.setRegion(region);
+
+
 
 
     }
