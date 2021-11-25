@@ -3,12 +3,11 @@ package com.example.playground.MainActivity.RetrofitGet;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.playground.R;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.util.List;
 
@@ -40,7 +39,7 @@ public class RetrofitGetActivity extends AppCompatActivity {
 
         call.enqueue(new Callback<List<Post>>() {
             @Override
-            public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
+            public void onResponse(@NonNull Call<List<Post>> call, @NonNull Response<List<Post>> response) {
                 if (!response.isSuccessful()) {
                     Log.e("getPosts", "Server respond back error: " + response.code());
                     return;
@@ -54,7 +53,7 @@ public class RetrofitGetActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<List<Post>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<Post>> call, @NonNull Throwable t) {
                 Log.e("getPosts", "error in communication with server : " + t.getMessage());
             }
         });
