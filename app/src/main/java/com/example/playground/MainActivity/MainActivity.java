@@ -10,6 +10,7 @@ import android.os.Bundle;
 import com.example.playground.MainActivity.AWSIoT.AWSIoTActivity;
 import com.example.playground.MainActivity.BluetoothSendData.BluetoothSendDataActivity;
 import com.example.playground.MainActivity.ImageView.ImageViewActivity;
+import com.example.playground.MainActivity.Retrofit.RetrofitActivity;
 import com.example.playground.R;
 
 import java.util.ArrayList;
@@ -38,10 +39,11 @@ public class MainActivity extends AppCompatActivity {
         Intent imageViewIntent = new Intent(this, ImageViewActivity.class);
         Intent sendBluetoothDataIntent = new Intent(this, BluetoothSendDataActivity.class);
 //        Intent AWSIoTIntent = new Intent(this, AWSIoTActivity.class);
+        Intent retrofitGetActivity = new Intent(this, RetrofitActivity.class);
 
         buttons.add(new MainActivityDataInstance("Image View",R.drawable.ic_image,imageViewIntent));
         buttons.add(new MainActivityDataInstance("Send Data via Bluetooth",R.drawable.ic_baseline_send_ble,sendBluetoothDataIntent));
-        buttons.add(new MainActivityDataInstance("Retrofit", R.drawable.ic_wifi,null));
+        buttons.add(new MainActivityDataInstance("Retrofit", R.drawable.ic_wifi,retrofitGetActivity));
 
 //        buttons.add(new MainActivityDataInstance("AWS IoT",R.drawable.ic_baseline_developer_board_24,AWSIoTIntent));
     }
