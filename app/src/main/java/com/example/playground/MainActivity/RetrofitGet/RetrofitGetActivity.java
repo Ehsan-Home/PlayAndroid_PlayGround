@@ -47,7 +47,10 @@ public class RetrofitGetActivity extends AppCompatActivity {
                 }
 
                 List<Post> posts = response.body();
-                Log.d("getPosts", "posts : " + posts.toString());
+                for (Post post: posts) {
+                    Log.d("getPosts", "post : " + post.toString());
+                }
+
             }
 
             @Override
