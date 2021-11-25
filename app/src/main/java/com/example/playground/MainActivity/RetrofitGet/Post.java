@@ -28,4 +28,14 @@ public class Post {
     public int getUserId() {
         return userId;
     }
+
+    @Override
+    public String toString() {
+        return "Post{" +
+                "title='" + title + '\'' +
+                ", text='" + text + '\'' +
+                ", id=" + id +
+                ", userId=" + userId +
+                '}';
+    }
 }
