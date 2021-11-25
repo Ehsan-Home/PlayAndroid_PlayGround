@@ -1,4 +1,4 @@
-package com.example.playground.MainActivity.Retrofit;
+package com.example.playground.MainActivity.RetrofitGet;
 
 import android.os.Bundle;
 
@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.playground.R;
 
-public class RetrofitActivity  extends AppCompatActivity {
+public class RetrofitGetActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
