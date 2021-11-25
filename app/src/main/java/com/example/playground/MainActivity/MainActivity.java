@@ -37,9 +37,12 @@ public class MainActivity extends AppCompatActivity {
     private void fillButtons () {
         Intent imageViewIntent = new Intent(this, ImageViewActivity.class);
         Intent sendBluetoothDataIntent = new Intent(this, BluetoothSendDataActivity.class);
-        Intent AWSIoTIntent = new Intent(this, AWSIoTActivity.class);
+//        Intent AWSIoTIntent = new Intent(this, AWSIoTActivity.class);
+
         buttons.add(new MainActivityDataInstance("Image View",R.drawable.ic_image,imageViewIntent));
         buttons.add(new MainActivityDataInstance("Send Data via Bluetooth",R.drawable.ic_baseline_send_ble,sendBluetoothDataIntent));
-        buttons.add(new MainActivityDataInstance("AWS IoT",R.drawable.ic_baseline_developer_board_24,AWSIoTIntent));
+        buttons.add(new MainActivityDataInstance("Retrofit", R.drawable.ic_wifi,null));
+
+//        buttons.add(new MainActivityDataInstance("AWS IoT",R.drawable.ic_baseline_developer_board_24,AWSIoTIntent));
     }
 }
