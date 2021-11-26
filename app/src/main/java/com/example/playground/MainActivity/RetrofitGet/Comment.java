@@ -14,4 +14,15 @@ public class Comment {
 
     @SerializedName("body")
     private String text;
+
+    @Override
+    public String toString() {
+        return "\n\n Comment{" +
+                "postId=" + postId +
+                ", id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", text='" + text + '\'' +
+                '}';
+    }
 }
