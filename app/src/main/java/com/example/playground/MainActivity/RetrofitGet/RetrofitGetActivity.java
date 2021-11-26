@@ -46,6 +46,13 @@ public class RetrofitGetActivity extends AppCompatActivity {
         public void onResponse(Call<List<Comment>> call, Response<List<Comment>> response) {
             if (!response.isSuccessful()) {
                 Log.e("fetchComments", "server responded back with error " + response.code());
+                return;
+            }
+
+            List<Comment> comments = response.body();
+
+            for (Comment comment: comments) {
+                Log.d("fetchComments", comment.toString());
             }
         }
 
