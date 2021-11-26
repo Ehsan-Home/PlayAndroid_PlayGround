@@ -36,14 +36,14 @@ public class RetrofitGetActivity extends AppCompatActivity {
 
         JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
 
-        Call<List<Comment>> call = jsonPlaceHolderApi.fetchComments(1);
+        Call<List<Comment>> call = jsonPlaceHolderApi.fetchComments(2);
 
         call.enqueue(fetchCommentsCallBack);
     }
 
     Callback<List<Comment>> fetchCommentsCallBack = new Callback<List<Comment>>() {
         @Override
-        public void onResponse(Call<List<Comment>> call, Response<List<Comment>> response) {
+        public void onResponse(@NonNull Call<List<Comment>> call, Response<List<Comment>> response) {
             if (!response.isSuccessful()) {
                 Log.e("fetchComments", "server responded back with error " + response.code());
                 return;
@@ -57,7 +57,7 @@ public class RetrofitGetActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onFailure(Call<List<Comment>> call, Throwable t) {
+        public void onFailure(@NonNull Call<List<Comment>> call, Throwable t) {
             Log.e("fetchComments", "error in communicating with server, code " +
                     t.getMessage());
         }
