@@ -24,8 +24,37 @@ public class RetrofitGetActivity extends AppCompatActivity {
         setContentView(R.layout.retrofit_get_activity);
 
 
-        fetchPosts();
+//        fetchPosts();
+        fetchComments();
     }
+
+    private void fetchComments() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://jsonplaceholder.typicode.com")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
+
+        Call<List<Comment>> call = jsonPlaceHolderApi.fetchComments(1);
+
+        call.enqueue(fetchCommentsCallBack);
+    }
+
+    Callback<List<Comment>> fetchCommentsCallBack = new Callback<List<Comment>>() {
+        @Override
+        public void onResponse(Call<List<Comment>> call, Response<List<Comment>> response) {
+            if (!response.isSuccessful()) {
+                Log.e("fetchComments", "server responded back with error " + response.code());
+            }
+        }
+
+        @Override
+        public void onFailure(Call<List<Comment>> call, Throwable t) {
+            Log.e("fetchComments", "error in communicating with server, code " +
+                    t.getMessage());
+        }
+    };
 
     private void fetchPosts() {
         Retrofit retrofit = new Retrofit.Builder()
